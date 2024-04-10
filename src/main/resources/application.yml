@@ -14,3 +14,18 @@ spring:
       ddl-auto: update
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+  mail:
+    host: sandbox.smtp.mailtrap.io
+    port: 587
+    username: ${MAILTRAP_USERNAME}
+    password: ${MAILTRAP_PASSWORD}
+    auth: plain
+    starttls:
+      enable: true
+
+jwt:
+  secret-key: ${JWT_SECRET_KEY}
+  expiration:
+    access-token: 300000
+    refresh-token: 3_600_000
