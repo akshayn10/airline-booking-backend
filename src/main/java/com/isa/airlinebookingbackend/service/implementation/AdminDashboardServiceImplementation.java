@@ -40,8 +40,8 @@ public class AdminDashboardServiceImplementation implements AdminDashboardServic
     public ResponseEntity<HttpStatusCode> addFlight(FlightPayload flightPayload) {
         Fleet existingFlightFleet = fleetRepository.findById(flightPayload.fleetId()).orElseThrow();
 
-        if (Boolean.TRUE.equals(flightRepository.existsByFleetAndDepartureTimeOrArrivalTimeBetween(existingFlightFleet,
-                flightPayload.departureTime(), flightPayload.arrivalTime()))) {
+        if (flightRepository.existsByFleetAndDepartureTimeOrArrivalTimeBetween(existingFlightFleet,
+                flightPayload.departureTime(), flightPayload.arrivalTime())) {
             throw new IllegalArgumentException();
         }
 
@@ -73,8 +73,36 @@ public class AdminDashboardServiceImplementation implements AdminDashboardServic
     }
 
     public ResponseEntity<List<FlightPayload>> getFlights() {
-        List<Flight> flights = flightRepository.findAllByFlightCancelledFalse();
-        return new ResponseEntity<>(domainPayloadMapper.flightsToFlightPayloads(flights), HttpStatus.OK);
+        List<Flight> flights = flightRepository.findAll();
+
+        List<FlightPayload> flightPayloads = domainPayloadMapper.flightsToFlightPayloads(flights);
+
+        for (Flight flight : flights) {
+            boolean hasBookings = isFlightHasBookings(flight);
+
+            flightPayloads.stream().filter(flightPayload -> flightPayload.id().equals(flight.getId())).findFirst().ifPresent(flightPayload -> {
+                FlightPayload updatedFlightPayload = new FlightPayload(
+                        flightPayload.id(),
+                        flightPayload.departureLocation(),
+                        flightPayload.arrivalLocation(),
+                        flightPayload.departureTime(),
+                        flightPayload.arrivalTime(),
+                        flightPayload.fleetId(),
+                        flightPayload.economyFare(),
+                        flightPayload.premiumFare(),
+                        flightPayload.businessFare(),
+                        flightPayload.remainingEconomySeats(),
+                        flightPayload.remainingPremiumSeats(),
+                        flightPayload.remainingBusinessSeats(),
+                        flightPayload.flightCancelled(),
+                        hasBookings
+                );
+                flightPayloads.remove(flightPayload);
+                flightPayloads.add(updatedFlightPayload);
+            });
+        }
+
+        return new ResponseEntity<>(flightPayloads, HttpStatus.OK);
     }
 
     public ResponseEntity<HttpStatusCode> updateFlightLocation(LocationPayload locationPayload) {
@@ -101,6 +129,10 @@ public class AdminDashboardServiceImplementation implements AdminDashboardServic
 
         Fleet flightFleet;
         if (!flightPayload.fleetId().equals(existingFlight.getFleet().getId())) {
+            if (isFlightHasBookings(existingFlight)) {
+                throw new IllegalArgumentException();
+            }
+
             flightFleet = fleetRepository.findById(flightPayload.fleetId()).orElseThrow();
             existingFlight.setFleet(flightFleet);
 
@@ -113,12 +145,18 @@ public class AdminDashboardServiceImplementation implements AdminDashboardServic
             existingFlight.setBusinessSeatFare(flightFleet.getTotalBusinessSeats() != 0 ? flightPayload.businessFare() : null);
         } else {
             flightFleet = existingFlight.getFleet();
+
+            if (!isFlightHasBookings(existingFlight)) {
+                existingFlight.setEconomySeatFare(flightFleet.getTotalEconomySeats() != 0 ? flightPayload.economyFare() : null);
+                existingFlight.setPremiumSeatFare(flightFleet.getTotalPremiumSeats() != 0 ? flightPayload.premiumFare() : null);
+                existingFlight.setBusinessSeatFare(flightFleet.getTotalBusinessSeats() != 0 ? flightPayload.businessFare() : null);
+            }
         }
 
         if ((!flightPayload.departureTime().equals(existingFlight.getDepartureTime())
                 && !flightPayload.arrivalTime().equals(existingFlight.getArrivalTime())) &&
-                (Boolean.TRUE.equals(flightRepository.existsByFleetAndDepartureTimeOrArrivalTimeBetween(flightFleet,
-                        flightPayload.departureTime(), flightPayload.arrivalTime())))) {
+                (flightRepository.existsByFleetAndDepartureTimeOrArrivalTimeBetween(flightFleet,
+                        flightPayload.departureTime(), flightPayload.arrivalTime()))) {
             throw new IllegalArgumentException();
         }
 
@@ -140,15 +178,34 @@ public class AdminDashboardServiceImplementation implements AdminDashboardServic
     }
 
     public ResponseEntity<HttpStatusCode> deleteFlightLocation(Long locationId) {
-        locationRepository.deleteById(locationId);
+        Location existingLocation = locationRepository.findById(locationId).orElseThrow();
+        if (flightRepository.existsByDepartureLocationOrArrivalLocation(existingLocation, existingLocation)) {
+            throw new IllegalArgumentException();
+        }
+
+        existingLocation.setDeleted(true);
+
+        locationRepository.save(existingLocation);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     public ResponseEntity<HttpStatusCode> cancelFlight(Long flightId) {
         Flight flight = flightRepository.findById(flightId).orElseThrow();
+        if (isFlightHasBookings(flight)) {
+            throw new IllegalArgumentException();
+        }
+
         flight.setFlightCancelled(true);
 
         flightRepository.save(flight);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    private boolean isFlightHasBookings(Flight flight) {
+        Fleet fleet = flight.getFleet();
+
+        return !flight.getRemainingEconomySeats().equals(fleet.getTotalEconomySeats()) ||
+                !flight.getRemainingPremiumSeats().equals(fleet.getTotalPremiumSeats()) ||
+                !flight.getRemainingBusinessSeats().equals(fleet.getTotalBusinessSeats());
     }
 }

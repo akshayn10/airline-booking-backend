@@ -32,4 +32,7 @@ public class Location {
 
     @Column(name = "airport_name", nullable = false)
     private String airportName;
+
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted = false;
 }

@@ -63,5 +63,5 @@ public class Flight {
     private Float businessSeatFare;
 
     @Column(name = "flight_cancelled", nullable = false)
-    private Boolean flightCancelled = false;
+    private boolean flightCancelled = false;
 }
