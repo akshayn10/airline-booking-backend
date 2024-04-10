@@ -63,7 +63,7 @@ public class AdminDashboardServiceImplementation implements AdminDashboardServic
     }
 
     public ResponseEntity<List<LocationPayload>> getFlightLocations() {
-        List<Location> locations = locationRepository.findAll();
+        List<Location> locations = locationRepository.findByOrderByIdAsc();
         return new ResponseEntity<>(domainPayloadMapper.locationsToLocationPayloads(locations), HttpStatus.OK);
     }
 
@@ -73,7 +73,7 @@ public class AdminDashboardServiceImplementation implements AdminDashboardServic
     }
 
     public ResponseEntity<List<FlightPayload>> getFlights() {
-        List<Flight> flights = flightRepository.findAll();
+        List<Flight> flights = flightRepository.findByOrderByArrivalTimeDesc();
 
         List<FlightPayload> flightPayloads = domainPayloadMapper.flightsToFlightPayloads(flights);
 

@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 @Repository
 public interface FlightRepository extends JpaRepository<Flight, Long> {
@@ -21,4 +22,6 @@ public interface FlightRepository extends JpaRepository<Flight, Long> {
     boolean existsByFleetAndDepartureTimeOrArrivalTimeBetween(@Param("fleet") Fleet fleet,
                                                               @Param("startTime") OffsetDateTime departureTime,
                                                               @Param("endTime") OffsetDateTime arrivalTime);
+
+    List<Flight> findByOrderByArrivalTimeDesc();
 }
