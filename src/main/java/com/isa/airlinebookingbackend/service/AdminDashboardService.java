@@ -24,6 +24,4 @@ public interface AdminDashboardService {
     ResponseEntity<HttpStatusCode> updateFlight(FlightPayload flightPayload);
 
     ResponseEntity<HttpStatusCode> deleteFlightLocation(Long locationId);
-
-    ResponseEntity<HttpStatusCode> cancelFlight(Long flightId);
 }
