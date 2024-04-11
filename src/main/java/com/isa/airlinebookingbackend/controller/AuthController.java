@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import static com.isa.airlinebookingbackend.constant.Constants.*;
 
+@CrossOrigin
 @RestController
 @Slf4j
 @RequestMapping("auth/")
@@ -19,7 +20,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping(LOGIN_URL)
-    public ResponseEntity<AuthenticationResponseDTO> login(@RequestBody AuthenticationRequestDTO authenticationRequestDTO) {
+    public ResponseEntity<ApiResponse<AuthenticationResponseDTO>> login(@RequestBody AuthenticationRequestDTO authenticationRequestDTO) {
         log.info("login request: {}", authenticationRequestDTO);
         var response = authService.authenticateUser(authenticationRequestDTO);
         return ResponseEntity.ok(response);

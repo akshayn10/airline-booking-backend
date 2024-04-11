@@ -7,7 +7,7 @@ import com.isa.airlinebookingbackend.dto.auth.response.AuthenticationResponseDTO
 
 public interface AuthService {
     ApiResponse<String> createUser(RegisterRequestDTO registerRequestDTO);
-    AuthenticationResponseDTO authenticateUser(AuthenticationRequestDTO authenticationRequestDTO);
+    ApiResponse<AuthenticationResponseDTO> authenticateUser(AuthenticationRequestDTO authenticationRequestDTO);
     AuthenticationResponseDTO generateAccessTokenWithRefreshToken(String refreshToken);
     ApiResponse<String> forgotPassword(ForgotPasswordRequestDto requestDto);
     ApiResponse<String> forgotPasswordConfirmation(ForgotPasswordConfirmationRequestDto requestDto);

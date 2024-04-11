@@ -10,6 +10,9 @@ import lombok.ToString;
 @RequiredArgsConstructor
 @ToString
 public class ContactDetailsRequestDTO {
+    @NotNull(message = "Email Cannot be null")
+    @NotEmpty(message = "Email is required")
+    private String email;
     @NotNull(message = "Address line cannot be null")
     @NotEmpty(message = "Address line is required")
     private String addressLine;

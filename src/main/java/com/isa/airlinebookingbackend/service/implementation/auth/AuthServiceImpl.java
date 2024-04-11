@@ -64,7 +64,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthenticationResponseDTO authenticateUser(AuthenticationRequestDTO request) {
+    public ApiResponse<AuthenticationResponseDTO> authenticateUser(AuthenticationRequestDTO request) {
         log.info("{} {}", request.getPassword(), request.getEmail());
         var authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -76,13 +76,21 @@ public class AuthServiceImpl implements AuthService {
 
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("User not exist"));
+        var userResponseDto = UserResponseDto.builder()
+                .email(user.getEmail())
+                .username(user.getUsername())
+                .createdAt(user.getCreatedAt())
+                .lastLogin(user.getLastLogin())
+                .isEnabled(user.isEnabled())
+                .isAccountNonLocked(user.isAccountNonLocked())
+                .build();
         var jwtToken = jwtService.generateToken(user.getEmail());
         var refreshToken = refreshTokenService.createRefreshToken(user);
-        return AuthenticationResponseDTO.builder()
+        return ApiResponse.success(AuthenticationResponseDTO.builder()
                 .accessToken(jwtToken)
-                .username(user.getUsername())
+                .user(userResponseDto)
                 .refreshToken(refreshToken)
-                .build();
+                .build());
     }
 
     @Override
@@ -90,10 +98,18 @@ public class AuthServiceImpl implements AuthService {
         RefreshToken refreshTokenFromRepo = refreshTokenService.findByToken(refreshToken);
         refreshTokenService.verifyExpiration(refreshTokenFromRepo);
         var user = refreshTokenFromRepo.getUser();
+        var userResponseDto = UserResponseDto.builder()
+                .email(user.getEmail())
+                .username(user.getUsername())
+                .createdAt(user.getCreatedAt())
+                .lastLogin(user.getLastLogin())
+                .isEnabled(user.isEnabled())
+                .isAccountNonLocked(user.isAccountNonLocked())
+                .build();
         var jwtToken = jwtService.generateToken(user.getEmail());
         return AuthenticationResponseDTO.builder()
                 .accessToken(jwtToken)
-                .username(user.getUsername())
+                .user(userResponseDto)
                 .refreshToken(refreshToken)
                 .build();
     }

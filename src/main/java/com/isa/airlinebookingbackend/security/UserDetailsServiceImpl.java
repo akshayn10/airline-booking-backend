@@ -22,7 +22,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         log.info("Loading user by email: {}", email);
         var user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         if(!user.isEnabled()){
-            throw new DisabledException("User is disabled");
+            throw new DisabledException("Email is not Activated");
         }
         if(!user.isAccountNonLocked()){
             throw new LockedException("User account is locked");
