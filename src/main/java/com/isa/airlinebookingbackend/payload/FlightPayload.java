@@ -6,6 +6,5 @@ public record FlightPayload(Long id, Long departureLocation, Long arrivalLocatio
                             OffsetDateTime departureTime, OffsetDateTime arrivalTime,
                             Long fleetId, Float economyFare, Float premiumFare, Float businessFare,
                             Integer remainingEconomySeats, Integer remainingPremiumSeats,
-                            Integer remainingBusinessSeats,
-                            boolean flightCancelled, boolean flightHasBookings) {
+                            Integer remainingBusinessSeats, boolean flightHasBookings) {
 }

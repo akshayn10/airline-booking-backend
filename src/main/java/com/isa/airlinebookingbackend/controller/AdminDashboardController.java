@@ -65,9 +65,4 @@ public class AdminDashboardController {
     public ResponseEntity<HttpStatusCode> deleteFlightLocation(@PathVariable("id") Long id) {
         return adminDashboardService.deleteFlightLocation(id);
     }
-
-    @DeleteMapping(path = "/flight/{id}")
-    public ResponseEntity<HttpStatusCode> cancelFlight(@PathVariable("id") Long id) {
-        return adminDashboardService.cancelFlight(id);
-    }
 }
