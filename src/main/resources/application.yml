@@ -1,17 +1,11 @@
 spring:
-  application:
-    name: airline-booking-backend
-
   datasource:
-    url: jdbc:postgresql://localhost:5432/airline-db
+    url: jdbc:postgresql://localhost:5432/Work_database
     username: root
     password: password
-    jpa:
-      properties:
-        hibernate:
-          jdbc:
-            lob:
-              non_contextual_creation: true
-            dialect: org.hibernate.dialect.PostgreSQLDialect
+  jpa:
+    properties:
       hibernate:
-        ddl-auto: update
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
