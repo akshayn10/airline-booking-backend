@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: airline-booking-backend
+
+  datasource:
+    url: jdbc:postgresql://postgres:5432/airline-db
+    username: postgres
+    password: admin
+
+  jpa:
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+  mail:
+    host: sandbox.smtp.mailtrap.io
+    port: 587
+    username: ${MAILTRAP_USERNAME}
+    password: ${MAILTRAP_PASSWORD}
+    auth: plain
+    starttls:
+      enable: true
+
+jwt:
+  secret-key: ${JWT_SECRET_KEY}
+  expiration:
+    access-token: 600000
+    refresh-token: 3_600_000
