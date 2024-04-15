@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import static com.isa.airlinebookingbackend.constant.Constants.*;
 
-@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 @RestController
 @Slf4j
 @RequestMapping("auth/")
