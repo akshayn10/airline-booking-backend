@@ -11,6 +11,7 @@ import com.isa.airlinebookingbackend.repository.FlightRepository;
 import com.isa.airlinebookingbackend.repository.LocationRepository;
 import com.isa.airlinebookingbackend.service.AdminDashboardService;
 import com.isa.airlinebookingbackend.utility.DomainPayloadMapper;
+import com.isa.airlinebookingbackend.utility.FlightUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -74,34 +75,7 @@ public class AdminDashboardServiceImplementation implements AdminDashboardServic
 
     public ResponseEntity<List<FlightPayload>> getFlights() {
         List<Flight> flights = flightRepository.findByOrderByArrivalTimeDesc();
-
-        List<FlightPayload> flightPayloads = domainPayloadMapper.flightsToFlightPayloads(flights);
-
-        for (Flight flight : flights) {
-            boolean hasBookings = isFlightHasBookings(flight);
-
-            flightPayloads.stream().filter(flightPayload -> flightPayload.id().equals(flight.getId())).findFirst().ifPresent(flightPayload -> {
-                FlightPayload updatedFlightPayload = new FlightPayload(
-                        flightPayload.id(),
-                        flightPayload.departureLocation(),
-                        flightPayload.arrivalLocation(),
-                        flightPayload.departureTime(),
-                        flightPayload.arrivalTime(),
-                        flightPayload.fleetId(),
-                        flightPayload.economyFare(),
-                        flightPayload.premiumFare(),
-                        flightPayload.businessFare(),
-                        flightPayload.remainingEconomySeats(),
-                        flightPayload.remainingPremiumSeats(),
-                        flightPayload.remainingBusinessSeats(),
-                        hasBookings
-                );
-                flightPayloads.remove(flightPayload);
-                flightPayloads.add(updatedFlightPayload);
-            });
-        }
-
-        return new ResponseEntity<>(flightPayloads, HttpStatus.OK);
+        return new ResponseEntity<>(domainPayloadMapper.flightsToFlightPayloads(flights), HttpStatus.OK);
     }
 
     public ResponseEntity<HttpStatusCode> updateFlightLocation(LocationPayload locationPayload) {
@@ -128,7 +102,7 @@ public class AdminDashboardServiceImplementation implements AdminDashboardServic
 
         Fleet flightFleet;
         if (!flightPayload.fleetId().equals(existingFlight.getFleet().getId())) {
-            if (isFlightHasBookings(existingFlight)) {
+            if (FlightUtils.isFlightHasBookings(existingFlight)) {
                 throw new IllegalArgumentException();
             }
 
@@ -145,7 +119,7 @@ public class AdminDashboardServiceImplementation implements AdminDashboardServic
         } else {
             flightFleet = existingFlight.getFleet();
 
-            if (!isFlightHasBookings(existingFlight)) {
+            if (!FlightUtils.isFlightHasBookings(existingFlight)) {
                 existingFlight.setEconomySeatFare(flightFleet.getTotalEconomySeats() != 0 ? flightPayload.economyFare() : null);
                 existingFlight.setPremiumSeatFare(flightFleet.getTotalPremiumSeats() != 0 ? flightPayload.premiumFare() : null);
                 existingFlight.setBusinessSeatFare(flightFleet.getTotalBusinessSeats() != 0 ? flightPayload.businessFare() : null);
@@ -184,13 +158,5 @@ public class AdminDashboardServiceImplementation implements AdminDashboardServic
 
         locationRepository.save(existingLocation);
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    private boolean isFlightHasBookings(Flight flight) {
-        Fleet fleet = flight.getFleet();
-
-        return !flight.getRemainingEconomySeats().equals(fleet.getTotalEconomySeats()) ||
-                !flight.getRemainingPremiumSeats().equals(fleet.getTotalPremiumSeats()) ||
-                !flight.getRemainingBusinessSeats().equals(fleet.getTotalBusinessSeats());
     }
 }
