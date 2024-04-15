@@ -1,7 +1,7 @@
-package com.isa.airlinebookingbackend.seatbooking.passenger.controller;
+package com.isa.airlinebookingbackend.controller;
 
-import com.isa.airlinebookingbackend.seatbooking.passenger.service.PassengerService;
-import com.isa.airlinebookingbackend.seatbooking.passenger.model.Passenger;
+import com.isa.airlinebookingbackend.service.implementation.PassengerService;
+import com.isa.airlinebookingbackend.entity.Passenger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/passenger/v1")
+@RequestMapping("/passenger")
 @RequiredArgsConstructor
 @Validated
 public class PassengerController {

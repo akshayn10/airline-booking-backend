@@ -1,6 +1,5 @@
-package com.isa.airlinebookingbackend.seatbooking.booking.model;
+package com.isa.airlinebookingbackend.entity;
 
-import com.isa.airlinebookingbackend.seatbooking.passenger.model.Passenger;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,11 +20,34 @@ public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long bookingId;
+
     @CreationTimestamp
     private Instant bookingDate;
-    private int totalCost;
+
+    private float totalCost;
+
     private LocalDate travelDate;
 
+    private int noOfSeatBooked;
+
+    private String seatTypeBooked;
+
+    private long flightId;
+
     @OneToMany(mappedBy = "booking" , fetch = FetchType.EAGER)
+
     private List<Passenger> passengers;
+
+    @Override
+    public String toString() {
+        return "Booking{" +
+                "bookingId=" + bookingId +
+                ", bookingDate=" + bookingDate +
+                ", totalCost=" + totalCost +
+                ", travelDate=" + travelDate +
+                ", noOfSeatBooked=" + noOfSeatBooked +
+                ", seatTypeBooked='" + seatTypeBooked + '\'' +
+                ", flightId=" + flightId +
+                '}';
+    }
 }

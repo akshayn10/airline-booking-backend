@@ -1,6 +1,6 @@
-package com.isa.airlinebookingbackend.seatbooking.passenger.repo;
+package com.isa.airlinebookingbackend.repository;
 
-import com.isa.airlinebookingbackend.seatbooking.passenger.model.Passenger;
+import com.isa.airlinebookingbackend.entity.Passenger;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

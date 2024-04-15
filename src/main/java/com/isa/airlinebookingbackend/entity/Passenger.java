@@ -1,7 +1,6 @@
-package com.isa.airlinebookingbackend.seatbooking.passenger.model;
+package com.isa.airlinebookingbackend.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.isa.airlinebookingbackend.seatbooking.booking.model.Booking;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,11 +17,17 @@ public class Passenger {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
+
     private String firstName;
+
     private String lastName;
+
     private String passportNo;
+
     private String mealPreference;
+
     private LocalDate dateOfBirth;
+
     private String gender;
 
     @ManyToOne(fetch = FetchType.EAGER)

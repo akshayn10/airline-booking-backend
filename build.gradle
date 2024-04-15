@@ -11,6 +11,10 @@ java {
     sourceCompatibility = '21'
 }
 
+ext {
+    mapstructVersion = '1.5.5.Final'
+}
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -24,9 +28,11 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.postgresql:postgresql'
     annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.hibernate:hibernate-core:6.4.4.Final'
 }

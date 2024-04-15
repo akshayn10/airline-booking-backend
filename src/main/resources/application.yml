@@ -1,4 +1,7 @@
 spring:
+  application:
+    name: airline-booking-backend
+
   datasource:
     url: jdbc:postgresql://localhost:5432/Work_database
     username: root
