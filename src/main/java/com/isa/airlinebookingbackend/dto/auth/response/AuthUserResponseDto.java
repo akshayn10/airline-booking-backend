@@ -1,4 +1,4 @@
-package com.isa.airlinebookingbackend.dto.auth.request;
+package com.isa.airlinebookingbackend.dto.auth.response;
 
 import lombok.*;
 
@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserResponseDto {
+public class AuthUserResponseDto {
     private String email;
     private String username;
     private LocalDateTime createdAt;

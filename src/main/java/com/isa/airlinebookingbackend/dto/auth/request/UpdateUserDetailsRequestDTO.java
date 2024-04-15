@@ -9,10 +9,7 @@ import lombok.ToString;
 @Getter
 @RequiredArgsConstructor
 @ToString
-public class ContactDetailsRequestDTO {
-    @NotNull(message = "Email Cannot be null")
-    @NotEmpty(message = "Email is required")
-    private String email;
+public class UpdateUserDetailsRequestDTO {
     @NotNull(message = "First name Cannot be null")
     @NotEmpty(message = "First name is required")
     private String firstName;

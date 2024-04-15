@@ -26,7 +26,7 @@ public class JwtServiceImpl extends JwtConfig implements JwtService {
     private final JwtConfig jwtConfig;
 
 
-    public String extractUsername(String token) {
+    public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -56,15 +56,14 @@ public class JwtServiceImpl extends JwtConfig implements JwtService {
         return (!isTokenExpired(token));
     }
 
-    public String generateToken(String email) {
-        Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, email);
+    public String generateToken(String email, String role) {
+        return createToken(email,role);
     }
 
-    private String createToken(Map<String, Object> claims, String email) {
+    private String createToken(String email, String role) {
 
         return Jwts.builder()
-                .claims(claims)
+                .claim("role", role)
                 .issuer(JWT_ISSUER)
                 .subject(email)
                 .issuedAt(new Date(System.currentTimeMillis()))

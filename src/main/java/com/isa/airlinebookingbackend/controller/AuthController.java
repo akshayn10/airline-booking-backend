@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import static com.isa.airlinebookingbackend.constant.Constants.*;
 
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 @RestController
 @Slf4j
 @RequestMapping("auth/")
@@ -34,13 +34,13 @@ public class AuthController {
     }
 
     @PostMapping(CONTACT_DETAILS_URL)
-    public ResponseEntity<String> contactDetails(@RequestBody ContactDetailsRequestDTO contactDetailsRequestDTO) {
+    public ResponseEntity<ApiResponse<String>> contactDetails(@RequestBody ContactDetailsRequestDTO contactDetailsRequestDTO) {
         log.info("contact details: {}", contactDetailsRequestDTO);
-        return ResponseEntity.ok("contact details saved");
+        return ResponseEntity.ok(authService.saveContactDetails(contactDetailsRequestDTO));
     }
 
     @GetMapping(REFRESH_TOKEN_URL)
-    public ResponseEntity<AuthenticationResponseDTO> refreshToken(@PathVariable String refreshToken) {
+    public ResponseEntity<ApiResponse<AuthenticationResponseDTO>> refreshToken(@PathVariable String refreshToken) {
         log.info("refresh token: {}", refreshToken);
         return ResponseEntity.ok(authService.generateAccessTokenWithRefreshToken(refreshToken));
     }

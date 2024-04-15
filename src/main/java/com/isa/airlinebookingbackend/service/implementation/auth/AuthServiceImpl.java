@@ -3,15 +3,13 @@ package com.isa.airlinebookingbackend.service.implementation.auth;
 
 import com.isa.airlinebookingbackend.dto.ApiResponse;
 import com.isa.airlinebookingbackend.dto.auth.request.*;
+import com.isa.airlinebookingbackend.dto.auth.response.AuthUserResponseDto;
 import com.isa.airlinebookingbackend.dto.auth.response.AuthenticationResponseDTO;
 import com.isa.airlinebookingbackend.entity.auth.OTP;
 import com.isa.airlinebookingbackend.entity.auth.RefreshToken;
 import com.isa.airlinebookingbackend.entity.auth.Role;
 import com.isa.airlinebookingbackend.entity.auth.User;
-import com.isa.airlinebookingbackend.exception.auth.OTPMismatchException;
-import com.isa.airlinebookingbackend.exception.auth.OTPNotVerifiedException;
-import com.isa.airlinebookingbackend.exception.auth.PasswordMisMatchException;
-import com.isa.airlinebookingbackend.exception.auth.UserNotFoundException;
+import com.isa.airlinebookingbackend.exception.auth.*;
 import com.isa.airlinebookingbackend.repository.UserRepository;
 import com.isa.airlinebookingbackend.service.auth.*;
 import jakarta.mail.MessagingException;
@@ -42,6 +40,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ApiResponse<String> createUser(RegisterRequestDTO registerRequestDTO) {
+        if (userRepository.existsByEmail(registerRequestDTO.getEmail())) {
+            throw new UserAlreadyExistWithEmailException("User Already Exist with the email");
+        }
+        if (userRepository.existsByUsername(registerRequestDTO.getUsername())) {
+            throw new UserAlreadyExistWithUsernameException("User Already Exist with the username");
+        }
         User user = User.builder()
                 .username(registerRequestDTO.getUsername())
                 .password(passwordEncoder.encode(registerRequestDTO.getPassword()))
@@ -76,7 +80,7 @@ public class AuthServiceImpl implements AuthService {
 
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("User not exist"));
-        var userResponseDto = UserResponseDto.builder()
+        var userResponseDto = AuthUserResponseDto.builder()
                 .email(user.getEmail())
                 .username(user.getUsername())
                 .createdAt(user.getCreatedAt())
@@ -84,7 +88,7 @@ public class AuthServiceImpl implements AuthService {
                 .isEnabled(user.isEnabled())
                 .isAccountNonLocked(user.isAccountNonLocked())
                 .build();
-        var jwtToken = jwtService.generateToken(user.getEmail());
+        var jwtToken = jwtService.generateToken(user.getEmail(), user.getRole().toString());
         var refreshToken = refreshTokenService.createRefreshToken(user);
         return ApiResponse.success(AuthenticationResponseDTO.builder()
                 .accessToken(jwtToken)
@@ -94,11 +98,11 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthenticationResponseDTO generateAccessTokenWithRefreshToken(String refreshToken) {
+    public ApiResponse<AuthenticationResponseDTO> generateAccessTokenWithRefreshToken(String refreshToken) {
         RefreshToken refreshTokenFromRepo = refreshTokenService.findByToken(refreshToken);
         refreshTokenService.verifyExpiration(refreshTokenFromRepo);
         var user = refreshTokenFromRepo.getUser();
-        var userResponseDto = UserResponseDto.builder()
+        var userResponseDto = AuthUserResponseDto.builder()
                 .email(user.getEmail())
                 .username(user.getUsername())
                 .createdAt(user.getCreatedAt())
@@ -106,12 +110,12 @@ public class AuthServiceImpl implements AuthService {
                 .isEnabled(user.isEnabled())
                 .isAccountNonLocked(user.isAccountNonLocked())
                 .build();
-        var jwtToken = jwtService.generateToken(user.getEmail());
-        return AuthenticationResponseDTO.builder()
+        var jwtToken = jwtService.generateToken(user.getEmail(), user.getRole().toString());
+        return ApiResponse.success(AuthenticationResponseDTO.builder()
                 .accessToken(jwtToken)
                 .user(userResponseDto)
                 .refreshToken(refreshToken)
-                .build();
+                .build());
     }
 
     @Override
@@ -174,5 +178,19 @@ public class AuthServiceImpl implements AuthService {
         user.setPassword(passwordEncoder.encode(requestDto.getNewPassword()));
         userRepository.save(user);
         return ApiResponse.success("Password changed successfully");
+    }
+
+    @Override
+    public ApiResponse<String> saveContactDetails(ContactDetailsRequestDTO requestDTO) {
+        var user = userRepository.findByEmail(requestDTO.getEmail()).orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
+        user.setAddressLine(requestDTO.getAddressLine());
+        user.setCity(requestDTO.getCity());
+        user.setZipCode(requestDTO.getZipCode());
+        user.setState(requestDTO.getState());
+        user.setCountry(requestDTO.getCountry());
+        user.setPhoneNumberPrefix(requestDTO.getPhoneNumberPrefix());
+        user.setPhoneNumber(requestDTO.getPhoneNumber());
+        userRepository.save(user);
+        return ApiResponse.success("Contact details successfully");
     }
 }
