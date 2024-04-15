@@ -29,10 +29,9 @@ public interface DomainPayloadMapper {
     Flight flightPayloadToFlight(FlightPayload flightPayload);
 
     @InheritInverseConfiguration
-    @Mapping(target = "flightHasBookings", expression = "java(FlightUtils.isFlightHasBookings(flight))")
     FlightPayload flightToFlightPayload(Flight flight);
 
     List<FlightPayload> flightsToFlightPayloads(List<Flight> flights);
 
-    List<FleetPayload> fleetsToFleetPayloads(List<Fleet> fleets);
+    List<FleetPayload> fleetsToFleetPayloads(List<Fleet>fleets);
 }
