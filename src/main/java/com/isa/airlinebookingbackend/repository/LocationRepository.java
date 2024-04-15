@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface LocationRepository extends JpaRepository<Location, Long> {
     Optional<Location> findLocationByCode(String code);
 
-    List<Location> findByOrderByIdAsc();
+    List<Location> findByOrderByCodeAsc();
 }

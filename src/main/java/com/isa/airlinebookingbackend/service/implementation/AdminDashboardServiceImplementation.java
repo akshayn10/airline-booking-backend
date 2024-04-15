@@ -63,7 +63,7 @@ public class AdminDashboardServiceImplementation implements AdminDashboardServic
     }
 
     public ResponseEntity<List<LocationPayload>> getFlightLocations() {
-        List<Location> locations = locationRepository.findByOrderByIdAsc();
+        List<Location> locations = locationRepository.findByOrderByCodeAsc();
         return new ResponseEntity<>(domainPayloadMapper.locationsToLocationPayloads(locations), HttpStatus.OK);
     }
 
@@ -94,7 +94,6 @@ public class AdminDashboardServiceImplementation implements AdminDashboardServic
                         flightPayload.remainingEconomySeats(),
                         flightPayload.remainingPremiumSeats(),
                         flightPayload.remainingBusinessSeats(),
-                        flightPayload.flightCancelled(),
                         hasBookings
                 );
                 flightPayloads.remove(flightPayload);
@@ -153,10 +152,8 @@ public class AdminDashboardServiceImplementation implements AdminDashboardServic
             }
         }
 
-        if ((!flightPayload.departureTime().equals(existingFlight.getDepartureTime())
-                && !flightPayload.arrivalTime().equals(existingFlight.getArrivalTime())) &&
-                (flightRepository.existsByFleetAndDepartureTimeOrArrivalTimeBetween(flightFleet,
-                        flightPayload.departureTime(), flightPayload.arrivalTime()))) {
+        if (flightRepository.existsByFleetAndDepartureTimeOrArrivalTimeBetween(flightFleet,
+                flightPayload.departureTime(), flightPayload.arrivalTime())) {
             throw new IllegalArgumentException();
         }
 
@@ -186,18 +183,6 @@ public class AdminDashboardServiceImplementation implements AdminDashboardServic
         existingLocation.setDeleted(true);
 
         locationRepository.save(existingLocation);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    public ResponseEntity<HttpStatusCode> cancelFlight(Long flightId) {
-        Flight flight = flightRepository.findById(flightId).orElseThrow();
-        if (isFlightHasBookings(flight)) {
-            throw new IllegalArgumentException();
-        }
-
-        flight.setFlightCancelled(true);
-
-        flightRepository.save(flight);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
