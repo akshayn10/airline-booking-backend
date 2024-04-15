@@ -1,6 +1,7 @@
 package com.isa.airlinebookingbackend.controller;
 
 import com.isa.airlinebookingbackend.payload.LocationPayload;
+import com.isa.airlinebookingbackend.payload.FlightPayload;
 import com.isa.airlinebookingbackend.service.FlightSearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,14 +17,18 @@ import java.util.List;
 @RequestMapping(path = "/v1/search")
 @RequiredArgsConstructor
 public class UserController {
-    private final FlightSearchService adminDashboardService;
+    private final FlightSearchService flightDashboardService;
 
 
     @GetMapping(path = "/location")
     public ResponseEntity<List<LocationPayload>> getLocations() {
-        return adminDashboardService.getFlightLocations();
+        return flightDashboardService.getFlightLocations();
     }
 
-    
+    @GetMapping(path = "/flight")
+    public ResponseEntity<List<FlightPayload>> getFlights() {
+        return flightDashboardService.getFlights();
+    }
+
 }
 
