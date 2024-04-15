@@ -152,10 +152,8 @@ public class AdminDashboardServiceImplementation implements AdminDashboardServic
             }
         }
 
-        if ((!flightPayload.departureTime().equals(existingFlight.getDepartureTime())
-                && !flightPayload.arrivalTime().equals(existingFlight.getArrivalTime())) &&
-                (flightRepository.existsByFleetAndDepartureTimeOrArrivalTimeBetween(flightFleet,
-                        flightPayload.departureTime(), flightPayload.arrivalTime()))) {
+        if (flightRepository.existsByFleetAndDepartureTimeOrArrivalTimeBetween(flightFleet,
+                flightPayload.departureTime(), flightPayload.arrivalTime())) {
             throw new IllegalArgumentException();
         }
 

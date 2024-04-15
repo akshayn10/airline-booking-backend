@@ -13,6 +13,7 @@ java {
 
 ext {
     mapstructVersion = '1.5.5.Final'
+    jjwtVersion = '0.12.5'
 }
 
 configurations {
@@ -27,14 +28,25 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    implementation "io.jsonwebtoken:jjwt-api:${jjwtVersion}"
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    runtimeOnly "io.jsonwebtoken:jjwt-impl:${jjwtVersion}"
+    runtimeOnly "io.jsonwebtoken:jjwt-jackson:${jjwtVersion}"
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.postgresql:postgresql'
     annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+<<<<<<< HEAD
     implementation 'org.hibernate:hibernate-core:6.4.4.Final'
+=======
+    testImplementation 'org.springframework.security:spring-security-test'
+>>>>>>> c694a1610a95b9379dd89cb59417b537595ac5be
 }
 
 tasks.named('test') {
