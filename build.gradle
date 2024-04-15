@@ -42,11 +42,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-<<<<<<< HEAD
-    implementation 'org.hibernate:hibernate-core:6.4.4.Final'
-=======
     testImplementation 'org.springframework.security:spring-security-test'
->>>>>>> c694a1610a95b9379dd89cb59417b537595ac5be
 }
 
 tasks.named('test') {
