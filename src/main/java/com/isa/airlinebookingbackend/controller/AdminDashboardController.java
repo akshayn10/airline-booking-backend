@@ -7,6 +7,7 @@ import com.isa.airlinebookingbackend.service.AdminDashboardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,8 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@CrossOrigin
+import static com.isa.airlinebookingbackend.constant.Constants.ADMIN_ACCESS;
+
 @RestController
+@PreAuthorize(ADMIN_ACCESS)
 @RequestMapping(path = "/v1/admin")
 @RequiredArgsConstructor
 public class AdminDashboardController {

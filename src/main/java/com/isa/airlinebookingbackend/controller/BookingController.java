@@ -8,6 +8,7 @@ import com.isa.airlinebookingbackend.service.implementation.PassengerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,8 +16,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.isa.airlinebookingbackend.constant.Constants.USER_ACCESS;
+
 @RestController
 @RequestMapping(path="/booking/v1")
+@PreAuthorize(USER_ACCESS)
 @RequiredArgsConstructor
 @Validated
 public class BookingController {
