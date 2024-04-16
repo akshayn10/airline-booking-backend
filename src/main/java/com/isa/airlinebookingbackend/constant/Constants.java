@@ -12,6 +12,7 @@ public class Constants {
     // Define Access
     public static final String ADMIN_ACCESS = "hasRole('ADMIN')";
     public static final String USER_ACCESS = "hasRole('USER')";
+    public static final String ADMIN_AND_USER_ACCESS  = "hasAnyRole('USER', 'ADMIN')";
 
     // Email Constants
     public static final String RESET_PASSWORD_SUBJECT = "Reset Password Verification code";
