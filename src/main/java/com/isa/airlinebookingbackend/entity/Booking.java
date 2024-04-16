@@ -27,8 +27,6 @@ public class Booking {
 
     private float totalCost;
 
-    private LocalDate travelDate;
-
     private int noOfSeatBooked;
 
     private String seatTypeBooked;
@@ -51,7 +49,6 @@ public class Booking {
                 ", bookingDate=" + bookingDate +
                 ", isCancelled=" + isCancelled +
                 ", totalCost=" + totalCost +
-                ", travelDate=" + travelDate +
                 ", noOfSeatBooked=" + noOfSeatBooked +
                 ", seatTypeBooked='" + seatTypeBooked + '\'' +
                 ", flightId=" + flight.getId() +
