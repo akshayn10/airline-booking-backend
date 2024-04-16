@@ -23,5 +23,5 @@ public interface FlightRepository extends JpaRepository<Flight, Long> {
                                                               @Param("startTime") OffsetDateTime departureTime,
                                                               @Param("endTime") OffsetDateTime arrivalTime);
 
-    List<Flight> findByOrderByArrivalTimeDesc();
+    List<Flight> findByOrderByDepartureTimeDesc();
 }
