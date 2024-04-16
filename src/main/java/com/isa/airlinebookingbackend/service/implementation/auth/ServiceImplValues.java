@@ -1,6 +1,6 @@
 package com.isa.airlinebookingbackend.service.implementation.auth;
 
-import com.isa.airlinebookingbackend.security.JwtConfig;
+import com.isa.airlinebookingbackend.security.ConfigValues;
 import com.isa.airlinebookingbackend.service.auth.JwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -12,8 +12,6 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Function;
 
 import static com.isa.airlinebookingbackend.constant.Constants.JWT_ISSUER;
@@ -22,8 +20,8 @@ import static com.isa.airlinebookingbackend.constant.Constants.JWT_ISSUER;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class JwtServiceImpl extends JwtConfig implements JwtService {
-    private final JwtConfig jwtConfig;
+public class ServiceImplValues extends ConfigValues implements JwtService {
+    private final ConfigValues jwtConfig;
 
 
     public String extractEmail(String token) {
