@@ -74,7 +74,7 @@ public class AdminDashboardServiceImplementation implements AdminDashboardServic
     }
 
     public ResponseEntity<List<FlightPayload>> getFlights() {
-        List<Flight> flights = flightRepository.findByOrderByArrivalTimeDesc();
+        List<Flight> flights = flightRepository.findByOrderByDepartureTimeDesc();
         return new ResponseEntity<>(domainPayloadMapper.flightsToFlightPayloads(flights), HttpStatus.OK);
     }
 
