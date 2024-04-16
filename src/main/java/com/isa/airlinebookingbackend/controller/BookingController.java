@@ -35,7 +35,7 @@ public class BookingController {
         bookingService.addBooking(booking);
         Map<String, Long> response = new HashMap<>();
         response.put("bookingId", booking.getBookingId());
-        response.put("flightId", booking.getFlightId());
+        response.put("flightId", booking.getFlight().getId());
         return ResponseEntity.ok().body(response);
     }
 

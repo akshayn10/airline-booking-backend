@@ -32,7 +32,7 @@ public class BookingService {
     public Booking addBooking(Booking booking) {
             Optional<Flight> existingFlight;
             Flight flight;
-            existingFlight = flightRepository.findById(booking.getFlightId());
+            existingFlight = flightRepository.findById(booking.getFlight().getId());
             flight = existingFlight.get();
 
             calculateTotalCost(booking.getSeatTypeBooked(),booking.getNoOfSeatBooked(),flight);

@@ -16,44 +16,44 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j //facilitates the logging of messages
+@Slf4j
 public class PassengerService {
     @Autowired
     private final PassengerRepo passengerRepo;
 
     private final FlightRepository flightRepo;
 
-    public List<Passenger> getAllPassengers() {
-        List<Passenger> passengers = passengerRepo.findAll();
-        return passengers.stream()
-                .map(passenger -> {
-                    Passenger passengerDTO = new Passenger();
-                    passengerDTO.setId(passenger.getId());
-                    passengerDTO.setFirstName(passenger.getFirstName());
-                    passengerDTO.setLastName(passenger.getLastName());
-                    passengerDTO.setPassportNo(passenger.getPassportNo());
-                    passengerDTO.setMealPreference(passenger.getMealPreference());
-                    passengerDTO.setDateOfBirth(passenger.getDateOfBirth());
-                    passengerDTO.setGender(passenger.getGender());
-
-                    // Map booking information
-                    Booking booking = passenger.getBooking();
-                    if (booking != null) {
-                        Booking bookingDTO = new Booking();
-                        bookingDTO.setBookingId(booking.getBookingId());
-                        bookingDTO.setBookingDate(booking.getBookingDate());
-                        bookingDTO.setTotalCost(booking.getTotalCost());
-                        bookingDTO.setTravelDate(booking.getTravelDate());
-                        bookingDTO.setNoOfSeatBooked(booking.getNoOfSeatBooked());
-                        bookingDTO.setSeatTypeBooked(booking.getSeatTypeBooked());
-                        bookingDTO.setFlightId(booking.getFlightId());
-                        passengerDTO.setBooking(bookingDTO);
-                    }
-
-                    return passengerDTO;
-                })
-                .collect(Collectors.toList());
-    }
+//    public List<Passenger> getAllPassengers() {
+//        List<Passenger> passengers = passengerRepo.findAll();
+//        return passengers.stream()
+//                .map(passenger -> {
+//                    Passenger passengerDTO = new Passenger();
+//                    passengerDTO.setId(passenger.getId());
+//                    passengerDTO.setFirstName(passenger.getFirstName());
+//                    passengerDTO.setLastName(passenger.getLastName());
+//                    passengerDTO.setPassportNo(passenger.getPassportNo());
+//                    passengerDTO.setMealPreference(passenger.getMealPreference());
+//                    passengerDTO.setDateOfBirth(passenger.getDateOfBirth());
+//                    passengerDTO.setGender(passenger.getGender());
+//
+//                    // Map booking information
+//                    Booking booking = passenger.getBooking();
+//                    if (booking != null) {
+//                        Booking bookingDTO = new Booking();
+//                        bookingDTO.setBookingId(booking.getBookingId());
+//                        bookingDTO.setBookingDate(booking.getBookingDate());
+//                        bookingDTO.setTotalCost(booking.getTotalCost());
+//                        bookingDTO.setTravelDate(booking.getTravelDate());
+//                        bookingDTO.setNoOfSeatBooked(booking.getNoOfSeatBooked());
+//                        bookingDTO.setSeatTypeBooked(booking.getSeatTypeBooked());
+//                        bookingDTO.setFlightId(booking.getFlightId());
+//                        passengerDTO.setBooking(bookingDTO);
+//                    }
+//
+//                    return passengerDTO;
+//                })
+//                .collect(Collectors.toList());
+//    }
 
     public Passenger getPassengerById(long id) {
         Optional<Passenger> optionalPassenger = passengerRepo.findById(id);

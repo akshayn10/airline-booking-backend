@@ -1,5 +1,6 @@
 package com.isa.airlinebookingbackend.entity;
 
+import com.isa.airlinebookingbackend.entity.auth.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,10 +33,15 @@ public class Booking {
 
     private String seatTypeBooked;
 
-    private long flightId;
+    @ManyToOne
+    private Flight flight;
+
+    private boolean isCancelled = false;
+
+    @ManyToOne
+    private User user;
 
     @OneToMany(mappedBy = "booking" , fetch = FetchType.EAGER)
-
     private List<Passenger> passengers;
 
     @Override
@@ -43,11 +49,13 @@ public class Booking {
         return "Booking{" +
                 "bookingId=" + bookingId +
                 ", bookingDate=" + bookingDate +
+                ", isCancelled=" + isCancelled +
                 ", totalCost=" + totalCost +
                 ", travelDate=" + travelDate +
                 ", noOfSeatBooked=" + noOfSeatBooked +
                 ", seatTypeBooked='" + seatTypeBooked + '\'' +
-                ", flightId=" + flightId +
+                ", flightId=" + flight.getId() +
+                ", user=" + user.getId() +
                 '}';
     }
 }
