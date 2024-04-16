@@ -102,19 +102,21 @@ public class UserServiceImpl implements UserService {
         List<Booking> allBookingsByUser = bookingRepo.findAllByUser(user);
         List<PastBookingResponseDTO> pastBookingsResponse = new ArrayList<>();
         for (Booking booking : allBookingsByUser) {
-            if (booking.getFlight().getDepartureTime().isBefore(OffsetDateTime.now())) {
+            if (booking.getFlight().getDepartureTime().isBefore(OffsetDateTime.now()) || booking.isCancelled()) {
                 String flightDetailsString = getFlightDetailsString(booking);
 
                 StringBuilder passengerNamesListString = new StringBuilder();
                 for (Passenger passenger : booking.getPassengers()) {
                     passengerNamesListString.append(passenger.getFirstName()).append(" ").append(passenger.getLastName());
+                    passengerNamesListString.append(", ");
                 }
                 var pastBookingResponseDTO = PastBookingResponseDTO.builder()
                         .bookingId(booking.getBookingId())
                         .flightDetails(flightDetailsString)
                         .bookingDateTime(booking.getBookingDate())
                         .passengers(passengerNamesListString.toString())
-                        .totalCost(booking.getTotalCost()).build();
+                        .totalCost(booking.getTotalCost())
+                        .isCancelled(booking.isCancelled()).build();
                 pastBookingsResponse.add(pastBookingResponseDTO);
             }
         }
@@ -134,8 +136,9 @@ public class UserServiceImpl implements UserService {
                 StringBuilder passengerNamesListString = new StringBuilder();
                 for (Passenger passenger : booking.getPassengers()) {
                     passengerNamesListString.append(passenger.getFirstName()).append(" ").append(passenger.getLastName());
+                    passengerNamesListString.append(", ");
                 }
-                var pastBookingResponseDTO = UpcomingTripResponseDTO.builder()
+                var upcomingTripDto = UpcomingTripResponseDTO.builder()
                         .bookingId(booking.getBookingId())
                         .flightDetails(flightDetailsString)
                         .bookingDateTime(booking.getBookingDate())
@@ -143,7 +146,8 @@ public class UserServiceImpl implements UserService {
                         .departureTime(booking.getFlight().getDepartureTime())
                         .arrivalTime(booking.getFlight().getArrivalTime())
                         .totalCost(booking.getTotalCost()).build();
-                upcomingTripResponseDTOS.add(pastBookingResponseDTO);
+
+                upcomingTripResponseDTOS.add(upcomingTripDto);
             }
         }
         return ApiResponse.success(upcomingTripResponseDTOS);
@@ -151,7 +155,7 @@ public class UserServiceImpl implements UserService {
 
     private String getFlightDetailsString(Booking booking) {
 
-        return booking.getFlight().getFleet().getCode() + " - " + " From " + booking.getFlight().getArrivalLocation().getCode() + " - " + " To " + booking.getFlight().getDepartureLocation().getCode();
+        return booking.getFlight().getFleet().getModel() + " - " + " From " + booking.getFlight().getArrivalLocation().getCode() + " - " + " To " + booking.getFlight().getDepartureLocation().getCode();
     }
 
 }
