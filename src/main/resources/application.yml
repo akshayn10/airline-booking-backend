@@ -6,14 +6,11 @@ spring:
     url: jdbc:postgresql://localhost:5432/Work_database
     username: root
     password: password
+
   jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: true
+    show-sql: true
     hibernate:
-<<<<<<< HEAD
-      ddl-auto: update
-=======
       ddl-auto: update
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
@@ -32,4 +29,3 @@ jwt:
   expiration:
     access-token: 300000
     refresh-token: 3_600_000
->>>>>>> c694a1610a95b9379dd89cb59417b537595ac5be
