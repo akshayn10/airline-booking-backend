@@ -2,6 +2,8 @@ package com.isa.airlinebookingbackend.exception;
 
 import com.isa.airlinebookingbackend.dto.ApiResponse;
 import com.isa.airlinebookingbackend.exception.auth.*;
+import com.isa.airlinebookingbackend.exception.booking.BookingNotFoundException;
+import com.isa.airlinebookingbackend.exception.booking.FlightNotFoundException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import jakarta.mail.MessagingException;
@@ -100,6 +102,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<String>> handleUnexpectedException(OTPNotFoundForUserException ex) {
         log.error(ex.getMessage());
         return new ResponseEntity<>(ApiResponse.error(ex.getMessage()), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler({BookingNotFoundException.class, FlightNotFoundException.class})
+    public ResponseEntity<ApiResponse<String>> handleUnexpectedException(BookingNotFoundException ex) {
+        log.error(ex.getMessage());
+        return new ResponseEntity<>(ApiResponse.error(ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(OTPNotVerifiedException.class)

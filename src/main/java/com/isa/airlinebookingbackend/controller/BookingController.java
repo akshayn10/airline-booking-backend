@@ -1,5 +1,6 @@
 package com.isa.airlinebookingbackend.controller;
 
+import com.isa.airlinebookingbackend.dto.booking.request.BookingRequestDTO;
 import com.isa.airlinebookingbackend.entity.Booking;
 import com.isa.airlinebookingbackend.entity.Flight;
 import com.isa.airlinebookingbackend.service.implementation.BookingService;
@@ -12,14 +13,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.isa.airlinebookingbackend.constant.Constants.USER_ACCESS;
 
 @RestController
-@RequestMapping(path="/booking/v1")
+@RequestMapping(path="/booking")
 @PreAuthorize(USER_ACCESS)
 @RequiredArgsConstructor
 @Validated
@@ -30,16 +29,13 @@ public class BookingController {
     @Autowired
     private PassengerService passengerService;
 
-    @PostMapping("/book")
-    public ResponseEntity<?> book(@RequestBody Booking booking) {
-        bookingService.addBooking(booking);
-        Map<String, Long> response = new HashMap<>();
-        response.put("bookingId", booking.getBookingId());
-        response.put("flightId", booking.getFlight().getId());
-        return ResponseEntity.ok().body(response);
+    @PostMapping()
+    public ResponseEntity<Long> book(@RequestBody BookingRequestDTO requestDTO) {
+        System.out.println(requestDTO.toString());
+        return ResponseEntity.ok().body( bookingService.addBooking(requestDTO).getBookingId());
     }
 
-    @GetMapping("/getBooking")
+    @GetMapping()
     public List<Booking> getBooking() {
         return bookingService.getAllBookings();
     }
@@ -52,5 +48,10 @@ public class BookingController {
     @GetMapping("/getByFlight/{id}")
     public Flight getFlight(@PathVariable long id) {
         return passengerService.getFlightbyId(id);
+    }
+
+    @PutMapping("/cancel-booking/{bookingId}")
+    public ResponseEntity<?> cancelBooking(@PathVariable long bookingId) {
+        return ResponseEntity.ok().body(bookingService.cancelBooking(bookingId));
     }
 }

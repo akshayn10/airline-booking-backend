@@ -3,24 +3,25 @@ package com.isa.airlinebookingbackend.entity;
 import com.isa.airlinebookingbackend.entity.auth.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Entity
+@Builder
 @Table(name="booking")
 public class Booking {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private long bookingId;
+    private Long bookingId;
 
     @CreationTimestamp
     private Instant bookingDate;
@@ -39,7 +40,7 @@ public class Booking {
     @ManyToOne
     private User user;
 
-    @OneToMany(mappedBy = "booking" , fetch = FetchType.EAGER)
+    @OneToMany( fetch = FetchType.EAGER)
     private List<Passenger> passengers;
 
     @Override

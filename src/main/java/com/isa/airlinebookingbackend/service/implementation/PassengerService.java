@@ -68,17 +68,6 @@ public class PassengerService {
         return passengerRepo.saveAll(passenger);
     }
 
-    //add passengers via Booking
-    public String addPassengers(List<Passenger> passengers, Booking booking) {
-        for(Passenger passenger : passengers) {
-            System.out.println("Booking Id :"+booking.getBookingId());
-            passenger.setBooking(booking);
-            System.out.println("Booking Id :"+passenger.getBooking().getBookingId());
-            passengerRepo.save(passenger);
-        }
-        return "passengerRepo.saveAll(passenger)";
-    }
-
     public Passenger updatePassenger(Passenger passenger){
         Optional<Passenger> existingPassenger = passengerRepo.findById(passenger.getId());
         if (existingPassenger.isPresent()) {
@@ -93,7 +82,8 @@ public class PassengerService {
     }
 
     public List<Passenger> getAllPassengersByBookingId(long bookingId) {
-        return passengerRepo.findAllByBookingBookingId(bookingId);
+//        return passengerRepo.findAllByBookingBookingId(bookingId);
+        return null;
     }
 
     public Flight getFlightbyId(long id) {
