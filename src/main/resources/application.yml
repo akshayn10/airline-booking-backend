@@ -3,9 +3,9 @@ spring:
     name: airline-booking-backend
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/Work_database
-    username: root
-    password: password
+    url: ${LOCAL_POSTGRESQL_DB_URL}
+    username: ${LOCAL_POSTGRESQL_DB_DEFAULT_USER}
+    password: ${LOCAL_POSTGRESQL_DB_DEFAULT_USER_PASSWORD}
 
   jpa:
     generate-ddl: true
