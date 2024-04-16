@@ -11,12 +11,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import static com.isa.airlinebookingbackend.constant.Constants.ADMIN_AND_USER_ACCESS;
 import static com.isa.airlinebookingbackend.constant.Constants.USER_ACCESS;
 
 @RestController
 @Slf4j
 @RequestMapping("user/")
-@PreAuthorize(USER_ACCESS)
+@PreAuthorize(ADMIN_AND_USER_ACCESS)
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
