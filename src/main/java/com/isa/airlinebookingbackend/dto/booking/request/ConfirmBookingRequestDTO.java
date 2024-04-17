@@ -9,11 +9,6 @@ import java.util.List;
 @Getter
 @RequiredArgsConstructor
 @ToString
-public class BookingRequestDTO {
-    private int noOfSeatBooked;
-    private String seatTypeBooked;
-    private Long flightId;
-    private String userEmail;
-    private List<PassengerRequestDTO> passengers;
+public class ConfirmBookingRequestDTO {
     private int[] seatNumbers;
 }

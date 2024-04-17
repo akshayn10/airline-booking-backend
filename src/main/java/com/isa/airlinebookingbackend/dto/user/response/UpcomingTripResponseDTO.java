@@ -19,6 +19,6 @@ public class UpcomingTripResponseDTO {
     private OffsetDateTime departureTime;
     private OffsetDateTime arrivalTime;
     private String passengers;
-    private String seatNumbers;
+    private int[] seatNumbers;
     private float totalCost;
 }
