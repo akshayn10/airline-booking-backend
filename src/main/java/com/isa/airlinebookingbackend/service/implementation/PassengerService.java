@@ -94,4 +94,8 @@ public class PassengerService {
 
             return optionalFlight.get();
     }
+
+    public List<Passenger> getAllPassengers() {
+        return passengerRepo.findAll();
+    }
 }
