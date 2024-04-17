@@ -36,9 +36,12 @@ public class Booking {
     private Flight flight;
 
     private boolean isCancelled = false;
+    private boolean isPaymentCompleted = false;
 
     @ManyToOne
     private User user;
+
+    private int[] seatNumbers;
 
     @OneToMany( fetch = FetchType.EAGER)
     private List<Passenger> passengers;
@@ -54,6 +57,7 @@ public class Booking {
                 ", seatTypeBooked='" + seatTypeBooked + '\'' +
                 ", flightId=" + flight.getId() +
                 ", user=" + user.getId() +
+                ", seatNumbers=" + seatNumbers +
                 '}';
     }
 }

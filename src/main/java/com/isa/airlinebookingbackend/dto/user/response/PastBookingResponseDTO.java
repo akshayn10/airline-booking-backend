@@ -16,7 +16,7 @@ public class PastBookingResponseDTO {
     private String flightDetails;
     private Instant bookingDateTime;
     private String passengers;
-    private String seatNumbers;
     private float totalCost;
     private boolean isCancelled;
+    private String status;
 }
