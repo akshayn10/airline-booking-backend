@@ -7,6 +7,7 @@ import com.isa.airlinebookingbackend.entity.Flight;
 import com.isa.airlinebookingbackend.service.implementation.BookingService;
 import com.isa.airlinebookingbackend.entity.Passenger;
 import com.isa.airlinebookingbackend.service.implementation.PassengerService;
+import com.isa.airlinebookingbackend.service.implementation.SeatAvailability;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+import static com.isa.airlinebookingbackend.constant.Constants.ADMIN_ACCESS;
 import static com.isa.airlinebookingbackend.constant.Constants.USER_ACCESS;
 
 @RestController
@@ -68,5 +69,12 @@ public class BookingController {
     @PutMapping("/cancel-booking/{bookingId}")
     public ResponseEntity<?> cancelBooking(@PathVariable long bookingId) {
         return ResponseEntity.ok().body(bookingService.cancelBooking(bookingId));
+    }
+
+    @PreAuthorize(ADMIN_ACCESS)
+    @GetMapping("/getBookedSeat")
+    public ResponseEntity<List<SeatAvailability>> getSeatDetails(){
+         List <SeatAvailability> seatAvailabilityMap = bookingService.getNoOfSeatBooked();
+        return ResponseEntity.ok().body(seatAvailabilityMap);
     }
 }

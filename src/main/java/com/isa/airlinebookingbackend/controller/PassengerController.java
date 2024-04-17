@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.isa.airlinebookingbackend.constant.Constants.ADMIN_ACCESS;
 import static com.isa.airlinebookingbackend.constant.Constants.USER_ACCESS;
 
 @RestController
@@ -21,11 +22,12 @@ public class PassengerController {
     @Autowired
     private PassengerService passengerService;
 
-//    @GetMapping("/getAllPassengers")
-//    public List<Passenger> getAllPassengers() {
-//        System.out.println("Inside getAllPassengers");
-//        return passengerService.getAllPassengers();
-//    }
+    @PreAuthorize(ADMIN_ACCESS)
+    @GetMapping("/getAllPassengers")
+    public List<Passenger> getAllPassengers() {
+        System.out.println("Inside getAllPassengers");
+        return passengerService.getAllPassengers();
+    }
 
     @GetMapping("/getPassengerbyId/{id}")
     public Passenger getPassengerById(@PathVariable Long id) {

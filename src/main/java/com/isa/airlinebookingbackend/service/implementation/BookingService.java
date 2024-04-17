@@ -19,10 +19,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
 
 
 @Service
@@ -126,5 +128,41 @@ public class BookingService {
                 throw new IllegalArgumentException("Invalid seat type: " + seatType);
         }
         return totalCost;
+    }
+
+    public List<SeatAvailability> getNoOfSeatBooked(){
+
+        List<SeatAvailability> seatDetails = new ArrayList<>();
+
+        List<Flight> allFlights = flightRepository.findAll();
+        List<Booking> bookings = bookingRepo.findAll();
+
+
+        for (Flight f : allFlights) {
+            SeatAvailability seatAvailability = new SeatAvailability(f.getId(),
+                    f.getRemainingEconomySeats(),
+                    f.getRemainingBusinessSeats(),
+                    f.getRemainingPremiumSeats());
+
+            for (Booking booking : bookings) {
+
+                if(booking.getFlight().equals(f)){
+
+                    int noOfSeatsBooked = booking.getNoOfSeatBooked();
+
+                    if (booking.getSeatTypeBooked().equals("economy")) {
+                        seatAvailability.setEconomySeats(seatAvailability.getEconomySeats() - noOfSeatsBooked);
+
+                    } else if (booking.getSeatTypeBooked().equals("business")) {
+                        seatAvailability.setBusinessSeats(seatAvailability.getBusinessSeats() - noOfSeatsBooked);
+
+                    } else {
+                        seatAvailability.setPremiumSeats(seatAvailability.getPremiumSeats() - noOfSeatsBooked);
+                    }
+                }
+            }
+            seatDetails.add(seatAvailability);
+        }
+        return seatDetails;
     }
 }
