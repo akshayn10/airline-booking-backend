@@ -15,4 +15,5 @@ public class BookingRequestDTO {
     private Long flightId;
     private String userEmail;
     private List<PassengerRequestDTO> passengers;
+    private int[] seatNumbers;
 }

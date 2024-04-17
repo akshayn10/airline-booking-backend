@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,7 +20,6 @@ import static com.isa.airlinebookingbackend.constant.Constants.USER_ACCESS;
 @RequestMapping(path="/booking")
 @PreAuthorize(USER_ACCESS)
 @RequiredArgsConstructor
-@Validated
 public class BookingController {
 
     @Autowired
@@ -43,6 +41,11 @@ public class BookingController {
     @GetMapping("/getPassengers/{id}")
     public List<Passenger> getPassengers(@PathVariable long id) {
         return passengerService.getAllPassengersByBookingId(id);
+    }
+
+    @GetMapping("/booked-seats/{flightId}")
+    public int[] getBookedSeatsForFlight(@PathVariable long flightId) {
+        return bookingService.getBookedSeats(flightId);
     }
 
     @GetMapping("/getByFlight/{id}")

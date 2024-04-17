@@ -40,6 +40,8 @@ public class Booking {
     @ManyToOne
     private User user;
 
+    private int[] seatNumbers;
+
     @OneToMany( fetch = FetchType.EAGER)
     private List<Passenger> passengers;
 
@@ -54,6 +56,7 @@ public class Booking {
                 ", seatTypeBooked='" + seatTypeBooked + '\'' +
                 ", flightId=" + flight.getId() +
                 ", user=" + user.getId() +
+                ", seatNumbers=" + seatNumbers +
                 '}';
     }
 }

@@ -96,13 +96,15 @@ public class UserServiceImpl implements UserService {
         return ApiResponse.success(userResponseDto);
     }
 
-    @Override
     public ApiResponse<List<PastBookingResponseDTO>> getPastBookings(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND + email));
         List<Booking> allBookingsByUser = bookingRepo.findAllByUser(user);
         List<PastBookingResponseDTO> pastBookingsResponse = new ArrayList<>();
         for (Booking booking : allBookingsByUser) {
             if (booking.getFlight().getDepartureTime().isBefore(OffsetDateTime.now()) || booking.isCancelled()) {
+                boolean isInProgress = !booking.isCancelled() &&
+                        booking.getFlight().getArrivalTime().isAfter(OffsetDateTime.now());
+
                 String flightDetailsString = getFlightDetailsString(booking);
 
                 StringBuilder passengerNamesListString = new StringBuilder();
@@ -110,18 +112,28 @@ public class UserServiceImpl implements UserService {
                     passengerNamesListString.append(passenger.getFirstName()).append(" ").append(passenger.getLastName());
                     passengerNamesListString.append(", ");
                 }
+
+                String status;
+                if (booking.isCancelled()) {
+                    status = "Cancelled";
+                } else if (isInProgress) {
+                    status = "InProgress";
+                } else {
+                    status = "Done";
+                }
+
                 var pastBookingResponseDTO = PastBookingResponseDTO.builder()
                         .bookingId(booking.getBookingId())
                         .flightDetails(flightDetailsString)
                         .bookingDateTime(booking.getBookingDate())
                         .passengers(passengerNamesListString.toString())
                         .totalCost(booking.getTotalCost())
-                        .isCancelled(booking.isCancelled()).build();
+                        .status(status)
+                        .build();
                 pastBookingsResponse.add(pastBookingResponseDTO);
             }
         }
         return ApiResponse.success(pastBookingsResponse);
-
     }
 
 
@@ -145,6 +157,7 @@ public class UserServiceImpl implements UserService {
                         .passengers(passengerNamesListString.toString())
                         .departureTime(booking.getFlight().getDepartureTime())
                         .arrivalTime(booking.getFlight().getArrivalTime())
+                        .seatNumbers(booking.getSeatNumbers())
                         .totalCost(booking.getTotalCost()).build();
 
                 upcomingTripResponseDTOS.add(upcomingTripDto);

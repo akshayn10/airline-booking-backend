@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,6 +62,7 @@ public class BookingService {
                 .flight(flight)
                 .totalCost(calculateTotalCost(requestDTO.getSeatTypeBooked(), requestDTO.getNoOfSeatBooked(), flight))
                 .user(user)
+                .seatNumbers(requestDTO.getSeatNumbers())
                 .passengers(passengers).build();
         Booking savedBooking = bookingRepo.save(booking);
         return savedBooking;
@@ -69,8 +71,26 @@ public class BookingService {
     public Booking cancelBooking(Long bookingId) {
         Booking booking = bookingRepo.findById(bookingId).orElseThrow(() -> new BookingNotFoundException("Booking not found with id " + bookingId));
         booking.setCancelled(true);
+        booking.setSeatNumbers(new int[0]);
         bookingRepo.save(booking);
         return booking;
+    }
+
+    public int[] getBookedSeats(Long flightId) {
+        List<Integer> seatsNumberList = new ArrayList<>();
+        var flight = flightRepository.findById(flightId).orElseThrow(() -> new FlightNotFoundException("Flight not found with id " + flightId));
+        var bookingsForFlight = bookingRepo.findAllByFlight(flight);
+        for (Booking booking : bookingsForFlight) {
+            int[] seatNumbersArray = booking.getSeatNumbers();
+            if(seatNumbersArray != null) {
+                for (int seatNumber : seatNumbersArray) {
+                    seatsNumberList.add(seatNumber);
+                }
+            }
+        }
+        return seatsNumberList.stream().mapToInt(Integer::intValue).toArray();
+
+
     }
 
     public List<Booking> getAllBookings() {
