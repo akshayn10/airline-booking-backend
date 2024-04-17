@@ -2,6 +2,8 @@ package com.isa.airlinebookingbackend.exception;
 
 import com.isa.airlinebookingbackend.dto.ApiResponse;
 import com.isa.airlinebookingbackend.exception.auth.*;
+import com.isa.airlinebookingbackend.exception.booking.BookingNotFoundException;
+import com.isa.airlinebookingbackend.exception.booking.FlightNotFoundException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import jakarta.mail.MessagingException;
@@ -44,7 +46,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({MethodArgumentNotValidException.class})
     public ResponseEntity<ApiResponse<Map<String, String>>> handleValidationException(MethodArgumentNotValidException ex) {
         List<ObjectError> errors = ex.getBindingResult().getAllErrors();
-        Map<String,String> map = HashMap.newHashMap(errors.size());
+        Map<String, String> map = HashMap.newHashMap(errors.size());
         errors.forEach(error -> {
             String key = ((FieldError) error).getField();
             String val = error.getDefaultMessage();
@@ -54,8 +56,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({UsernameNotFoundException.class, BadCredentialsException.class, UserNotFoundException.class,UserAlreadyExistWithEmailException.class, AuthenticationCredentialsNotFoundException.class})
-    public ResponseEntity<ApiResponse<String>> handleUnexpectedException(Exception ex) {
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ApiResponse<String>> handleUnexpectedException(BadCredentialsException ex) {
+        log.error(ex.getMessage());
+        return new ResponseEntity<>(ApiResponse.error(ex.getMessage()), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(AuthenticationCredentialsNotFoundException.class)
+    public ResponseEntity<ApiResponse<String>> handleUnexpectedException(AuthenticationCredentialsNotFoundException ex) {
         log.error(ex.getMessage());
         return new ResponseEntity<>(ApiResponse.error(ex.getMessage()), HttpStatus.UNAUTHORIZED);
     }
@@ -87,7 +95,25 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(OTPExpiredException.class)
     public ResponseEntity<ApiResponse<String>> handleUnexpectedException(OTPExpiredException ex) {
         log.error(ex.getMessage());
-        return new ResponseEntity<>(ApiResponse.error(ex.getMessage()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(ApiResponse.error(ex.getMessage()), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler({UserNotFoundException.class})
+    public ResponseEntity<ApiResponse<String>> handleUnexpectedException(UserNotFoundException ex) {
+        log.error(ex.getMessage());
+        return new ResponseEntity<>(ApiResponse.error(ex.getMessage()), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({UserAlreadyExistWithEmailException.class})
+    public ResponseEntity<ApiResponse<String>> handleUnexpectedException(UserAlreadyExistWithEmailException ex) {
+        log.error(ex.getMessage());
+        return new ResponseEntity<>(ApiResponse.error(ex.getMessage()), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler({UserAlreadyExistWithUsernameException.class})
+    public ResponseEntity<ApiResponse<String>> handleUnexpectedException(UserAlreadyExistWithUsernameException ex) {
+        log.error(ex.getMessage());
+        return new ResponseEntity<>(ApiResponse.error(ex.getMessage()), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(OTPMismatchException.class)
@@ -102,21 +128,36 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ApiResponse.error(ex.getMessage()), HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(BookingNotFoundException.class)
+    public ResponseEntity<ApiResponse<String>> handleUnexpectedException(BookingNotFoundException ex) {
+        log.error(ex.getMessage());
+        return new ResponseEntity<>(ApiResponse.error(ex.getMessage()), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(FlightNotFoundException.class)
+    public ResponseEntity<ApiResponse<String>> handleUnexpectedException(FlightNotFoundException ex) {
+        log.error(ex.getMessage());
+        return new ResponseEntity<>(ApiResponse.error(ex.getMessage()), HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(OTPNotVerifiedException.class)
     public ResponseEntity<ApiResponse<String>> handleUnexpectedException(OTPNotVerifiedException ex) {
         log.error(ex.getMessage());
         return new ResponseEntity<>(ApiResponse.error(ex.getMessage()), HttpStatus.UNAUTHORIZED);
     }
+
     @ExceptionHandler(PasswordMisMatchException.class)
     public ResponseEntity<ApiResponse<String>> handleUnexpectedException(PasswordMisMatchException ex) {
         log.error(ex.getMessage());
         return new ResponseEntity<>(ApiResponse.error(ex.getMessage()), HttpStatus.UNAUTHORIZED);
     }
+
     @ExceptionHandler(RefreshTokenExpiredException.class)
     public ResponseEntity<ApiResponse<String>> handleUnexpectedException(RefreshTokenExpiredException ex) {
         log.error(ex.getMessage());
         return new ResponseEntity<>(ApiResponse.error(ex.getMessage()), HttpStatus.UNAUTHORIZED);
     }
+
     @ExceptionHandler(RefreshTokenNotFoundException.class)
     public ResponseEntity<ApiResponse<String>> handleUnexpectedException(RefreshTokenNotFoundException ex) {
         log.error(ex.getMessage());

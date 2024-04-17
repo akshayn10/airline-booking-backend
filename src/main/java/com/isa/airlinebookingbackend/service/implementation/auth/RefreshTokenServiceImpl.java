@@ -5,7 +5,7 @@ import com.isa.airlinebookingbackend.entity.auth.User;
 import com.isa.airlinebookingbackend.exception.auth.RefreshTokenExpiredException;
 import com.isa.airlinebookingbackend.exception.auth.RefreshTokenNotFoundException;
 import com.isa.airlinebookingbackend.repository.RefreshTokenRepository;
-import com.isa.airlinebookingbackend.security.JwtConfig;
+import com.isa.airlinebookingbackend.security.ConfigValues;
 import com.isa.airlinebookingbackend.service.auth.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class RefreshTokenServiceImpl implements RefreshTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
-    private final JwtConfig jwtConfig;
+    private final ConfigValues configValues;
 
     @Override
     public String createRefreshToken(User user) {
@@ -55,7 +55,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     }
 
     private Instant getExpiryDate() {
-        return Instant.now().plusMillis(jwtConfig.getRefreshExpiration());
+        return Instant.now().plusMillis(configValues.getRefreshExpiration());
     }
 
 }

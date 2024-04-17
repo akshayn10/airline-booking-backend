@@ -5,7 +5,7 @@ import com.isa.airlinebookingbackend.entity.auth.User;
 import com.isa.airlinebookingbackend.exception.auth.OTPExpiredException;
 import com.isa.airlinebookingbackend.exception.auth.OTPNotFoundForUserException;
 import com.isa.airlinebookingbackend.repository.OTPRepository;
-import com.isa.airlinebookingbackend.security.JwtConfig;
+import com.isa.airlinebookingbackend.security.ConfigValues;
 import com.isa.airlinebookingbackend.service.auth.OTPService;
 import com.isa.airlinebookingbackend.utility.OTPGenerator;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import java.time.Instant;
 @RequiredArgsConstructor
 public class OTPServiceImpl implements OTPService {
     private final OTPRepository otpRepository;
-    private final JwtConfig jwtConfig;
+    private final ConfigValues configValues;
 
     @Override
     public String createOTP(User user) {
@@ -62,7 +62,7 @@ public class OTPServiceImpl implements OTPService {
     }
 
     private Instant getExpiryDate() {
-        return Instant.now().plusMillis(jwtConfig.getAccessExpiration());
+        return Instant.now().plusMillis(configValues.getOtpExpiration());
     }
     private String getOTP() {
         return OTPGenerator.generateOTP();

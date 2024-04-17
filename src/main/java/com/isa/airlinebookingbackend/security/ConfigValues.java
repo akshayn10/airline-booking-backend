@@ -6,12 +6,14 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @Getter
-public class JwtConfig {
+public class ConfigValues {
     @Value("${jwt.secret-key}")
     private String secretKey;
     @Value("${jwt.expiration.access-token}")
     private long accessExpiration;
     @Value("${jwt.expiration.refresh-token}")
     private long refreshExpiration;
+    @Value("${otp.expiration}")
+    private long otpExpiration;
 
 }

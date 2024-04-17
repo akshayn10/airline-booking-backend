@@ -29,3 +29,6 @@ jwt:
   expiration:
     access-token: 300000
     refresh-token: 3_600_000
+
+otp:
+  expiration: 900000

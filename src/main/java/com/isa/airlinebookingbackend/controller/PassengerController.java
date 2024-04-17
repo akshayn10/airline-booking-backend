@@ -21,11 +21,11 @@ public class PassengerController {
     @Autowired
     private PassengerService passengerService;
 
-    @GetMapping("/getAllPassengers")
-    public List<Passenger> getAllPassengers() {
-        System.out.println("Inside getAllPassengers");
-        return passengerService.getAllPassengers();
-    }
+//    @GetMapping("/getAllPassengers")
+//    public List<Passenger> getAllPassengers() {
+//        System.out.println("Inside getAllPassengers");
+//        return passengerService.getAllPassengers();
+//    }
 
     @GetMapping("/getPassengerbyId/{id}")
     public Passenger getPassengerById(@PathVariable Long id) {

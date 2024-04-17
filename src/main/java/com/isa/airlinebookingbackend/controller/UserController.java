@@ -4,12 +4,16 @@ import com.isa.airlinebookingbackend.dto.ApiResponse;
 import com.isa.airlinebookingbackend.dto.auth.request.ContactDetailsRequestDTO;
 import com.isa.airlinebookingbackend.dto.auth.request.UpdateUserDetailsRequestDTO;
 import com.isa.airlinebookingbackend.dto.auth.response.UserResponseDto;
+import com.isa.airlinebookingbackend.dto.user.response.PastBookingResponseDTO;
+import com.isa.airlinebookingbackend.dto.user.response.UpcomingTripResponseDTO;
 import com.isa.airlinebookingbackend.service.auth.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static com.isa.airlinebookingbackend.constant.Constants.ADMIN_AND_USER_ACCESS;
 import static com.isa.airlinebookingbackend.constant.Constants.USER_ACCESS;
@@ -28,16 +32,29 @@ public class UserController {
 
         return ResponseEntity.ok(userService.addContactDetails(requestDTO));
     }
+
     @PutMapping("{email}")
     public ResponseEntity<ApiResponse<UserResponseDto>> updateUserDetails(@RequestBody UpdateUserDetailsRequestDTO requestDTO, @PathVariable String email) {
         log.info("Update user Details request: {}", requestDTO.toString());
 
-        return ResponseEntity.ok(userService.updateUserDetails(email,requestDTO));
+        return ResponseEntity.ok(userService.updateUserDetails(email, requestDTO));
     }
 
     @GetMapping("by-email/{email}")
     public ResponseEntity<ApiResponse<UserResponseDto>> getUserDetailsByEmail(@PathVariable String email) {
         log.info("Get by email request: {}", email);
         return ResponseEntity.ok(userService.getUserDetailsByEmail(email));
+    }
+
+    @GetMapping("past-bookings/{userEmail}")
+    public ResponseEntity<ApiResponse<List<PastBookingResponseDTO>>> getPastBookings(@PathVariable String userEmail) {
+        log.info("Get past bookings request: {}", userEmail);
+        return ResponseEntity.ok(userService.getPastBookings(userEmail));
+    }
+
+    @GetMapping("upcoming-trips/{userEmail}")
+    public ResponseEntity<ApiResponse<List<UpcomingTripResponseDTO>>> getUpcomingTrips(@PathVariable String userEmail) {
+        log.info("Get upcoming trips request: {}", userEmail);
+        return ResponseEntity.ok(userService.getUpcomingTrips(userEmail));
     }
 }

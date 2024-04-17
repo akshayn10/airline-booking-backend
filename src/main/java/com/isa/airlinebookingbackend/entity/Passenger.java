@@ -1,6 +1,5 @@
 package com.isa.airlinebookingbackend.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +8,7 @@ import java.time.LocalDate;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data //generates getters and setters
+@Data
 @Entity
 @Table(name = "passenger")
 public class Passenger {
@@ -30,9 +29,5 @@ public class Passenger {
 
     private String gender;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name= "booking_id")
-    @JsonIgnore
-    private Booking booking;
 
 }

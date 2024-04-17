@@ -1,41 +1,46 @@
 package com.isa.airlinebookingbackend.entity;
 
+import com.isa.airlinebookingbackend.entity.auth.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Entity
+@Builder
 @Table(name="booking")
 public class Booking {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private long bookingId;
+    private Long bookingId;
 
     @CreationTimestamp
     private Instant bookingDate;
 
     private float totalCost;
 
-    private LocalDate travelDate;
-
     private int noOfSeatBooked;
 
     private String seatTypeBooked;
 
-    private long flightId;
+    @ManyToOne
+    private Flight flight;
 
-    @OneToMany(mappedBy = "booking" , fetch = FetchType.EAGER)
+    private boolean isCancelled = false;
 
+    @ManyToOne
+    private User user;
+
+    @OneToMany( fetch = FetchType.EAGER)
     private List<Passenger> passengers;
 
     @Override
@@ -43,11 +48,12 @@ public class Booking {
         return "Booking{" +
                 "bookingId=" + bookingId +
                 ", bookingDate=" + bookingDate +
+                ", isCancelled=" + isCancelled +
                 ", totalCost=" + totalCost +
-                ", travelDate=" + travelDate +
                 ", noOfSeatBooked=" + noOfSeatBooked +
                 ", seatTypeBooked='" + seatTypeBooked + '\'' +
-                ", flightId=" + flightId +
+                ", flightId=" + flight.getId() +
+                ", user=" + user.getId() +
                 '}';
     }
 }
