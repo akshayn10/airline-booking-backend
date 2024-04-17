@@ -143,7 +143,7 @@ public class UserServiceImpl implements UserService {
         List<Booking> allBookingsByUser = bookingRepo.findAllByUser(user);
         List<UpcomingTripResponseDTO> upcomingTripResponseDTOS = new ArrayList<>();
         for (Booking booking : allBookingsByUser) {
-            if (booking.getFlight().getDepartureTime().isAfter(OffsetDateTime.now()) && !booking.isCancelled()) {
+            if (booking.getFlight().getDepartureTime().isAfter(OffsetDateTime.now()) && !booking.isCancelled() && booking.isPaymentCompleted()) {
                 String flightDetailsString = getFlightDetailsString(booking);
                 StringBuilder passengerNamesListString = new StringBuilder();
                 for (Passenger passenger : booking.getPassengers()) {

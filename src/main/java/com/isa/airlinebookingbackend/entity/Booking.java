@@ -36,6 +36,7 @@ public class Booking {
     private Flight flight;
 
     private boolean isCancelled = false;
+    private boolean isPaymentCompleted = false;
 
     @ManyToOne
     private User user;

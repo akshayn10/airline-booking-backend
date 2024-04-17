@@ -1,6 +1,7 @@
 package com.isa.airlinebookingbackend.controller;
 
 import com.isa.airlinebookingbackend.dto.booking.request.BookingRequestDTO;
+import com.isa.airlinebookingbackend.dto.booking.request.ConfirmBookingRequestDTO;
 import com.isa.airlinebookingbackend.entity.Booking;
 import com.isa.airlinebookingbackend.entity.Flight;
 import com.isa.airlinebookingbackend.service.implementation.BookingService;
@@ -17,7 +18,7 @@ import java.util.List;
 import static com.isa.airlinebookingbackend.constant.Constants.USER_ACCESS;
 
 @RestController
-@RequestMapping(path="/booking")
+@RequestMapping(path = "/booking")
 @PreAuthorize(USER_ACCESS)
 @RequiredArgsConstructor
 public class BookingController {
@@ -30,12 +31,17 @@ public class BookingController {
     @PostMapping()
     public ResponseEntity<Long> book(@RequestBody BookingRequestDTO requestDTO) {
         System.out.println(requestDTO.toString());
-        return ResponseEntity.ok().body( bookingService.addBooking(requestDTO).getBookingId());
+        return ResponseEntity.ok().body(bookingService.addBooking(requestDTO).getBookingId());
     }
 
     @GetMapping()
     public List<Booking> getBooking() {
         return bookingService.getAllBookings();
+    }
+
+    @GetMapping("/{bookingId}")
+    public Booking getBooking(@PathVariable Long bookingId) {
+        return bookingService.getBookingById(bookingId);
     }
 
     @GetMapping("/getPassengers/{id}")
@@ -51,6 +57,12 @@ public class BookingController {
     @GetMapping("/getByFlight/{id}")
     public Flight getFlight(@PathVariable long id) {
         return passengerService.getFlightbyId(id);
+    }
+
+    @PutMapping("/confirm-booking/{bookingId}")
+    public ResponseEntity<Void> confirmBooking(@PathVariable long bookingId, @RequestBody ConfirmBookingRequestDTO requestDTO) {
+        bookingService.confirmBooking(bookingId, requestDTO);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/cancel-booking/{bookingId}")
