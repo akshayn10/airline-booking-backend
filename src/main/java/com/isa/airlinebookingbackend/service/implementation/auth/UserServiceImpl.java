@@ -133,6 +133,7 @@ public class UserServiceImpl implements UserService {
                 pastBookingsResponse.add(pastBookingResponseDTO);
             }
         }
+        pastBookingsResponse.sort((trip1, trip2) -> trip2.getBookingDateTime().compareTo(trip1.getBookingDateTime()));
         return ApiResponse.success(pastBookingsResponse);
     }
 
@@ -163,6 +164,7 @@ public class UserServiceImpl implements UserService {
                 upcomingTripResponseDTOS.add(upcomingTripDto);
             }
         }
+        upcomingTripResponseDTOS.sort((trip1, trip2) -> trip2.getBookingDateTime().compareTo(trip1.getBookingDateTime()));
         return ApiResponse.success(upcomingTripResponseDTOS);
     }
 

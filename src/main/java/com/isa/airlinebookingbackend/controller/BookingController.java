@@ -1,5 +1,6 @@
 package com.isa.airlinebookingbackend.controller;
 
+import com.isa.airlinebookingbackend.dto.ApiResponse;
 import com.isa.airlinebookingbackend.dto.booking.request.BookingRequestDTO;
 import com.isa.airlinebookingbackend.dto.booking.request.ConfirmBookingRequestDTO;
 import com.isa.airlinebookingbackend.entity.Booking;
@@ -67,7 +68,7 @@ public class BookingController {
     }
 
     @PutMapping("/cancel-booking/{bookingId}")
-    public ResponseEntity<?> cancelBooking(@PathVariable long bookingId) {
+    public ResponseEntity<ApiResponse<Booking>> cancelBooking(@PathVariable long bookingId) {
         return ResponseEntity.ok().body(bookingService.cancelBooking(bookingId));
     }
 

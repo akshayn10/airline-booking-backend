@@ -1,5 +1,6 @@
 package com.isa.airlinebookingbackend.service.implementation;
 
+import com.isa.airlinebookingbackend.dto.ApiResponse;
 import com.isa.airlinebookingbackend.dto.booking.request.BookingRequestDTO;
 import com.isa.airlinebookingbackend.dto.booking.request.ConfirmBookingRequestDTO;
 import com.isa.airlinebookingbackend.dto.booking.request.PassengerRequestDTO;
@@ -71,12 +72,12 @@ public class BookingService {
         return savedBooking;
     }
 
-    public Booking cancelBooking(Long bookingId) {
+    public ApiResponse<Booking> cancelBooking(Long bookingId) {
         Booking booking = bookingRepo.findById(bookingId).orElseThrow(() -> new BookingNotFoundException("Booking not found with id " + bookingId));
         booking.setCancelled(true);
         booking.setSeatNumbers(new int[0]);
         bookingRepo.save(booking);
-        return booking;
+        return ApiResponse.success(booking);
     }
 
     public Booking getBookingById(Long bookingId) {
